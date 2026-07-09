@@ -11,6 +11,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 | Skill | What it does |
 |---|---|
 | [`refine`](./refine) | A generalized, domain-agnostic iterative-improvement harness. Turns "make this better" into a disciplined loop: frame the purpose, decompose into independently-improvable units, derive the evaluation lenses that purpose demands, observe the real rendered output, improve every unit in parallel, verify, iterate, and accumulate lessons so it gets better each run. Works on a slide deck, a document, a codebase, or an analysis. |
+| [`autonomous-loop`](./autonomous-loop) | A generalized "loop engineering" harness. Turns "just let the agent finish the project on its own" into a robust MISSION goal file: it discovers the project's real verification gates and work queue, draws three live diagrams (the loop, the task-dependency DAG, the data flow), installs safety guardrails (stop-don't-fabricate, no-auto-commit, adversarial verification, hygiene, explicit termination), and self-checks the plan. Run it plan-only to produce an implementation roadmap a team can estimate and execute, or hand the MISSION to an agent to drive to completion. |
 
 ## The `refine` super-prompt
 

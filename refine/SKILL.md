@@ -10,9 +10,10 @@ evaluation lenses that purpose demands, then observe and improve every unit, ver
 same shape works for a slide deck, a document, a codebase, or an analysis. What changes per project is
 the decomposition, the lenses, and the "observe" command; the loop is constant.
 
-This skill is the orchestrator. When a domain already has a rubric and helpers (for example the
-`silotech-presentation-generator` skill has `references/design-review-rubric.md`, `scripts/split_slides.py`,
-and `scripts/design-qa-workflow.js`), compose with them instead of reinventing.
+This skill is the orchestrator. When the domain you are refining already ships its own rubric or helper
+scripts (a design-review rubric, a slide splitter, a QA workflow, a linter), compose with them instead of
+reinventing. If nothing exists, derive the rubric from the artifact's purpose (step 3) and write a small
+splitter for the format (step 2).
 
 Related but different: `autonomous-loop` drives an unfinished project toward completion; `refine` improves
 an artifact that already exists by reviewing it from many angles and raising its quality.
@@ -28,8 +29,8 @@ purpose or bar is genuinely ambiguous and the answer changes the lenses. Frame d
 Split the artifact into independently-improvable units and pick an isolation strategy so parallel work
 never conflicts:
 - Structured single file (HTML deck, long Markdown): split into one file per unit, improve each, reassemble.
-  For SiloTech decks reuse `silotech-presentation-generator/scripts/split_slides.py` + `reassemble_slides.py`;
-  for other single files write a small splitter on the section delimiter. Verify the split roundtrips
+  If the format already has a splitter/reassembler, reuse it; otherwise write a small splitter on the
+  section delimiter (one file per slide, per section, per chapter). Verify the split roundtrips
   byte-identically before touching anything.
 - Multi-file project (repo, folder): units are files. One agent per file is already conflict-free. If
   agents must build or run tests that mutate shared state, give each a git worktree (`isolation: 'worktree'`).

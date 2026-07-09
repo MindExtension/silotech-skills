@@ -2,8 +2,8 @@
 
 Lenses are the perspectives a great practitioner applies when judging quality. They come from the
 artifact's PURPOSE and AUDIENCE, not from a fixed list. Pick 3 to 6, write them as concrete pass/fail
-checks, and have every reviewer score against all of them. When a domain skill already ships a rubric,
-use it (for SiloTech decks: `silotech-presentation-generator/references/design-review-rubric.md`).
+checks, and have every reviewer score against all of them. When a domain skill or style guide already
+ships a rubric, use it instead of deriving one from scratch.
 
 ## How to derive
 
