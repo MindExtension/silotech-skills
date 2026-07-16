@@ -13,12 +13,14 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 | [`refine`](./refine) | A generalized, domain-agnostic iterative-improvement harness. Turns "make this better" into a disciplined loop: frame the purpose, decompose into independently-improvable units, derive the evaluation lenses that purpose demands, observe the real rendered output, improve every unit in parallel, verify, iterate, and accumulate lessons so it gets better each run. Works on a slide deck, a document, a codebase, or an analysis. |
 | [`autonomous-loop`](./autonomous-loop) | A generalized "loop engineering" harness. Turns "just let the agent finish the project on its own" into a robust MISSION goal file: it discovers the project's real verification gates and work queue, draws three live diagrams (the loop, the task-dependency DAG, the data flow), installs safety guardrails (stop-don't-fabricate, no-auto-commit, adversarial verification, hygiene, explicit termination), and self-checks the plan. Run it plan-only to produce an implementation roadmap a team can estimate and execute, or hand the MISSION to an agent to drive to completion. |
 | [`launch-readiness`](./launch-readiness) | A multi-agent "does this look live?" review. Fans out 10-15 perspective subagents (placeholder copy, test data, default assets, SEO leftovers, dead links, test-mode payments, raw i18n keys, debug routes, legal gaps, funnel walkthrough) over the codebase and the deployed product in several discovery rounds, adversarially verifies every finding, and writes a stable-numbered action plan the user triages and hands to `autonomous-loop` for fixing. The detector and planner that sits in front of the other two skills. |
+| [`gmail-multi-account`](./gmail-multi-account) | Connect any number of Gmail mailboxes to one agent: search and read mail, download attachments (e.g. supplier invoices for bookkeeping), and create reply drafts in the right mailbox and thread. One shared OAuth Desktop client, one token file per mailbox, three stdlib-only Python scripts, and a browser consent flow that works even on headless machines. Drafts only - the human always presses Send. |
 
 ## Which one, when
 
 - You have a thing (deck, doc, codebase, analysis) and want it **better** -> `refine`.
 - You have a project and want an agent to **drive it to done** (or produce the roadmap for that) -> `autonomous-loop`.
 - You have a product that is about to go (or just went) **live** and want to know what still smells unfinished -> `launch-readiness`, then hand its plan to `autonomous-loop`, and polish individual artifacts with `refine`.
+- You have **several Gmail inboxes** and want one agent to read them all, pull the invoices, and prepare replies -> `gmail-multi-account`.
 
 ## The `refine` super-prompt
 
