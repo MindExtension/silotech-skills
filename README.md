@@ -16,6 +16,9 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 | [`workflow-edgecase-audit`](./workflow-edgecase-audit) | An evidence-first, read-only workflow bug hunt. Maps end-to-end state transitions, assigns up to 10 independent audit zones, probes concurrency, idempotency, retries, timeouts, auth and integration boundaries, then adversarially revalidates and deduplicates every finding. Includes a deterministic workflow inventory helper and works in both Claude and Codex Agent Skills harnesses. |
 | [`feature-factory`](./feature-factory) | A conductor that turns ONE natural-language feature request into a review-ready PR without a human writing the code, keeping a human at every decision that is genuinely theirs. Sequences the other skills (`autonomous-loop`, `refine`, plus arch-check and a shared adversarial-audit workflow) through seven gated stages: intake, CTO triage, plan+spec (with an idea tournament), build, adversarial test, UX review, delivery. Mechanical safety barriers (no push/deploy credentials in the run's worktree, path and secret guards, all external text treated as untrusted data) mean the safety model lives in mechanism, not in asking the model nicely. It never merges or deploys, and routes anything touching auth, billing, RLS, migrations, or other invariants to a human as a proposal instead of building it. |
 | [`gmail-multi-account`](./gmail-multi-account) | Connect any number of Gmail mailboxes to one agent: search and read mail, download attachments (e.g. supplier invoices for bookkeeping), and create reply drafts in the right mailbox and thread. One shared OAuth Desktop client, one token file per mailbox, three stdlib-only Python scripts, and a browser consent flow that works even on headless machines. Drafts only - the human always presses Send. |
+| [`plain-answers`](./plain-answers) | A plain-language output setup that fixes jargon-dense, wall-of-text agent replies. A Claude Code output style (lead with the answer, short sentences, no unexplained acronyms, length matched to the question) plus an equivalent `AGENTS.md` block for Codex. Ships with install steps and the reasoning for why an output style beats the same rule in CLAUDE.md. |
+| [`bro`](./bro) | One-line skill: restate the last answer in plain human language with zero jargon, at a third of the length, keeping every decision and number that mattered. |
+| [`quick`](./quick) | One-line skill: compress the last answer into the N most important takeaways (default 3), numbered, most important first; an open question for the user is always number 1. |
 
 ## Which one, when
 
@@ -25,6 +28,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 - You have a codebase with green happy paths but want to find **workflow and state-transition bugs** -> `workflow-edgecase-audit`, then fix accepted findings through your normal implementation workflow.
 - You have **one well-scoped feature request** and want an agent to carry it from intake to a review-ready PR (with human gates on every real decision) -> `feature-factory`, which drives `autonomous-loop` for the build and `refine` for the copy/screens.
 - You have **several Gmail inboxes** and want one agent to read them all, pull the invoices, and prepare replies -> `gmail-multi-account`.
+- Your agent's replies are **jargon-dense walls of text** -> install `plain-answers` (the output style), then use `bro` and `quick` to shorten on demand.
 
 ## The `refine` super-prompt
 
