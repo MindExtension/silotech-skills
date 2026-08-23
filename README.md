@@ -10,6 +10,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 
 | Skill | What it does |
 |---|---|
+| [`product-transcreation`](./product-transcreation) | A research-led product localization harness. It recovers the human and product truth before writing, researches how native speakers actually express the same ideas, rebuilds each locale around its own voice, and independently verifies terminology, phrase structure, meaning, user agency, interface constraints, and source evidence. Designed for landing pages, onboarding, interfaces, pricing, and product narratives that must sound conceived in the target language, not translated from a template. |
 | [`refine`](./refine) | A generalized, domain-agnostic iterative-improvement harness. Turns "make this better" into a disciplined loop: frame the purpose, decompose into independently-improvable units, derive the evaluation lenses that purpose demands, observe the real rendered output, improve every unit in parallel, verify, iterate, and accumulate lessons so it gets better each run. Works on a slide deck, a document, a codebase, or an analysis. |
 | [`autonomous-loop`](./autonomous-loop) | A generalized "loop engineering" harness. Turns "just let the agent finish the project on its own" into a robust MISSION goal file: it discovers the project's real verification gates and work queue, draws three live diagrams (the loop, the task-dependency DAG, the data flow), installs safety guardrails (stop-don't-fabricate, no-auto-commit, adversarial verification, hygiene, explicit termination), and self-checks the plan. Run it plan-only to produce an implementation roadmap a team can estimate and execute, or hand the MISSION to an agent to drive to completion. |
 | [`launch-readiness`](./launch-readiness) | A multi-agent "does this look live?" review. Fans out 10-15 perspective subagents (placeholder copy, test data, default assets, SEO leftovers, dead links, test-mode payments, raw i18n keys, debug routes, legal gaps, funnel walkthrough) over the codebase and the deployed product in several discovery rounds, adversarially verifies every finding, and writes a stable-numbered action plan the user triages and hands to `autonomous-loop` for fixing. The detector and planner that sits in front of the other two skills. |
@@ -22,6 +23,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 
 ## Which one, when
 
+- You have product copy in one or more languages and want it to sound **native, human, and evidence-backed**, while preserving product truth and interface constraints -> `product-transcreation`.
 - You have a thing (deck, doc, codebase, analysis) and want it **better** -> `refine`.
 - You have a project and want an agent to **drive it to done** (or produce the roadmap for that) -> `autonomous-loop`.
 - You have a product that is about to go (or just went) **live** and want to know what still smells unfinished -> `launch-readiness`, then hand its plan to `autonomous-loop`, and polish individual artifacts with `refine`.

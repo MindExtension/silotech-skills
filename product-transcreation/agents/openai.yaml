@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Transcreation"
+  short_description: "Evidence-led native product localization"
+  default_prompt: "Use $product-transcreation to turn this product copy into native, evidence-backed target-language storytelling without literal translation."
