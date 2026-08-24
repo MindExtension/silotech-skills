@@ -20,6 +20,9 @@ Apply this contract after the writer pass. The verifier must not be the writer.
 - High-impact terminology and phrases have an evidence verdict.
 - Sentence order, collocations, register, and emotional intensity fit the target language.
 - No phrase depends on the reader recognizing the source-language skeleton.
+- High-impact copy passes the spoken-language ear test: a native speaker could say it without mentally translating it first.
+- Agency is expressed through natural human actions, not abstract ownership slogans or repeated possessives.
+- Conversational tone comes from native syntax and rhythm, not forced slang or informality.
 - Interface actions are immediate and clear even when the surrounding narrative is emotional.
 - Repeated marketing rhythm across locales has not replaced native expression.
 
@@ -52,6 +55,8 @@ Answer all ten before passing a locale:
 8. Which term is inconsistent, ambiguous, or in the wrong register?
 9. Which high-impact phrase has the weakest native evidence?
 10. Does the rendered copy still fit and guide action?
+11. Which sentence is grammatical but would still sound translated when spoken aloud?
+12. Did the spoken-language pass preserve precision on interface, trust, and technical copy?
 
 ## Passing bar
 
@@ -62,6 +67,7 @@ A locale passes only when:
 - source meaning has full coverage;
 - the person's purpose and agency are explicit;
 - no obvious calque remains;
+- no high-impact sentence fails the spoken-language ear test;
 - mechanical locale checks pass;
 - the changed surfaces have been reviewed in their rendered context.
 

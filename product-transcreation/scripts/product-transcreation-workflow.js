@@ -1,4 +1,4 @@
-// Evidence-led product transcreation: research, write, independently verify, repair.
+// Evidence-led product transcreation: research, write, rewrite for the ear, independently verify, repair.
 // Each locale owns exactly one target file, so locale writers can work in parallel.
 //
 // LAUNCH:
@@ -18,10 +18,11 @@
 
 export const meta = {
   name: 'product-transcreation',
-  description: 'Research, transcreate, verify, and repair native-language product copy without literal template translation',
+  description: 'Research, transcreate, rewrite for the ear, verify, and repair native-language product copy without literal template translation',
   phases: [
     { title: 'Research', detail: 'find real native usage and reject calques' },
     { title: 'Write', detail: 'rebuild each locale around the human and product truth' },
+    { title: 'Voice', detail: 'remove translated sentence structures and make the copy speakable' },
     { title: 'Verify', detail: 'independently test evidence, meaning, agency, and interface integrity' },
     { title: 'Repair', detail: 'fix blocking findings and verify again' },
   ],
@@ -50,6 +51,7 @@ const files = TARGETS.map(target => target.file)
 if (new Set(files).size !== files.length) throw new Error('Each target locale must own a unique editable file')
 
 const EVIDENCE_GUIDE = `${REFERENCE_ROOT}/native-evidence.md`
+const SPOKEN_GUIDE = `${REFERENCE_ROOT}/spoken-language-pass.md`
 const CONTRACT = `${REFERENCE_ROOT}/transcreation-contract.md`
 const LESSONS = `${REFERENCE_ROOT}/lessons.md`
 
@@ -81,6 +83,21 @@ const WRITE_SCHEMA = {
     unresolved: { type: 'array', items: { type: 'string' } },
   },
   required: ['locale', 'changed', 'changedSurfaces', 'terminologyChanges', 'rejectedLiterals', 'unresolved'],
+}
+
+const VOICE_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    locale: { type: 'string' },
+    changed: { type: 'boolean' },
+    nativeVoice: { type: 'string' },
+    rephrasedPhrases: { type: 'array', items: { type: 'string' } },
+    translatedPatternsRemoved: { type: 'array', items: { type: 'string' } },
+    precisePhrasesKept: { type: 'array', items: { type: 'string' } },
+    unresolved: { type: 'array', items: { type: 'string' } },
+  },
+  required: ['locale', 'changed', 'nativeVoice', 'rephrasedPhrases', 'translatedPatternsRemoved', 'precisePhrasesKept', 'unresolved'],
 }
 
 const VERIFY_SCHEMA = {
@@ -178,14 +195,50 @@ const writes = await parallel(
   }))
 )
 
-function verifierPrompt(target, ledger, writeResult, repairContext = '') {
+function voicePrompt(target, ledger, writeResult) {
+  return `You are the native spoken-language editor for locale ${target.locale}. Edit only this file: ${target.file}
+
+Read:
+- source copy: ${SOURCE}
+- current transcreated target copy: ${target.file}
+- spoken-language pass: ${SPOKEN_GUIDE}
+- native evidence rules: ${EVIDENCE_GUIDE}
+
+Approved product truth: ${PRODUCT_TRUTH}
+Audience: ${AUDIENCE}
+Differentiation: ${DIFFERENTIATION}
+Scope: ${scopeText(target)}
+Hard constraints: ${CONSTRAINTS}
+
+Native-language research ledger:
+${JSON.stringify(ledger, null, 2)}
+
+First writer report:
+${JSON.stringify(writeResult, null, 2)}
+
+This is not a second translation pass. Read every scoped sentence as something a native speaker might actually say in this setting. If a phrase is grammatical but still exposes source-language word order, abstract noun lists, repeated possessives, an ownership formula, imported metaphor, or template slogan rhythm, return to the intended meaning and write a fresh native sentence.
+
+Prefer a clear person and concrete verb. Preserve agency by saying what the person actually writes, chooses, tells, notices, shapes, owns, or controls. Do not force slang, filler, or youth language. Keep buttons and labels conventional, trust and technical copy precise, and narrative copy warm and speakable. Preserve exact product meaning, keys, placeholders, variables, plurals, markup, links, brand names, valid file format, and approximate rendered length.
+
+Do not touch legal, privacy, admin, developer-only, or out-of-scope content. Do not edit another file. Read the edited copy back for the ear test, then report the phrases rephrased, translated patterns removed, precise phrases deliberately kept, and anything unresolved.`
+}
+
+const voiceEdits = await parallel(
+  TARGETS.map((target, index) => () => agent(voicePrompt(target, research[index], writes[index]), {
+    schema: VOICE_SCHEMA,
+    label: `voice:${target.locale}`,
+    phase: 'Voice',
+  }))
+)
+
+function verifierPrompt(target, ledger, writeResult, voiceResult, repairContext = '') {
   return `You are an independent native-language verifier for locale ${target.locale}. You did not write the copy. Do not edit files.
 
 Read:
 - source copy: ${SOURCE}
 - changed target copy: ${target.file}
 - evidence rules: ${EVIDENCE_GUIDE}
-- verification contract, including all ten verifier questions: ${CONTRACT}
+- verification contract, including every verifier question: ${CONTRACT}
 
 Product truth: ${PRODUCT_TRUTH}
 Audience: ${AUDIENCE}
@@ -198,15 +251,18 @@ ${JSON.stringify(ledger, null, 2)}
 
 Writer report:
 ${JSON.stringify(writeResult, null, 2)}
+
+Spoken-language editor report:
+${JSON.stringify(voiceResult, null, 2)}
 ${repairContext}
 
 Independently open and inspect at least two of the strongest cited sources. Check that the cited phrase appears in the claimed meaning and register. Search suspicious candidate phrases directly. Then compare source and target meaning by meaning, not only key by key.
 
-Fail the locale for any unsupported product claim, missing core meaning, lost human agency, obvious calque, invented evidence, broken placeholder or file structure, out-of-scope edit, or unrenderable copy. A high score does not override a blocker. Pass only if the full contract is satisfied.`
+Fail the locale for any unsupported product claim, missing core meaning, lost human agency, obvious calque, high-impact phrase that still sounds translated when spoken aloud, invented evidence, broken placeholder or file structure, out-of-scope edit, or unrenderable copy. A high score does not override a blocker. Pass only if the full contract is satisfied.`
 }
 
 const firstVerification = await parallel(
-  TARGETS.map((target, index) => () => agent(verifierPrompt(target, research[index], writes[index]), {
+  TARGETS.map((target, index) => () => agent(verifierPrompt(target, research[index], writes[index], voiceEdits[index]), {
     schema: VERIFY_SCHEMA,
     label: `verify:${target.locale}`,
     phase: 'Verify',
@@ -218,10 +274,10 @@ const failedIndices = firstVerification
   .filter(item => !item.result || !item.result.pass)
   .map(item => item.index)
 
-function repairPrompt(target, ledger, writeResult, verification) {
+function repairPrompt(target, ledger, writeResult, voiceResult, verification) {
   return `You are repairing locale ${target.locale}. Edit only ${target.file}.
 
-Read the source ${SOURCE}, current target ${target.file}, evidence rules ${EVIDENCE_GUIDE}, verification contract ${CONTRACT}, and lessons ${LESSONS}.
+Read the source ${SOURCE}, current target ${target.file}, evidence rules ${EVIDENCE_GUIDE}, spoken-language pass ${SPOKEN_GUIDE}, verification contract ${CONTRACT}, and lessons ${LESSONS}.
 
 Product truth: ${PRODUCT_TRUTH}
 Audience: ${AUDIENCE}
@@ -234,6 +290,9 @@ ${JSON.stringify(ledger, null, 2)}
 
 Previous writer report:
 ${JSON.stringify(writeResult, null, 2)}
+
+Spoken-language editor report:
+${JSON.stringify(voiceResult, null, 2)}
 
 Independent verification:
 ${JSON.stringify(verification, null, 2)}
@@ -248,6 +307,7 @@ const repairs = failedIndices.length ? await parallel(
     TARGETS[index],
     research[index],
     writes[index],
+    voiceEdits[index],
     firstVerification[index],
   ), {
     schema: WRITE_SCHEMA,
@@ -265,6 +325,7 @@ if (failedIndices.length) {
       TARGETS[index],
       research[index],
       repairByIndex.get(index),
+      voiceEdits[index],
       `\nThis is a post-repair verification. Previous findings:\n${JSON.stringify(firstVerification[index], null, 2)}`,
     ), {
       schema: VERIFY_SCHEMA,
@@ -289,6 +350,13 @@ const perLocale = TARGETS.map((target, index) => {
     changedSurfaces: finalWrite ? finalWrite.changedSurfaces : [],
     terminologyChanges: finalWrite ? finalWrite.terminologyChanges : [],
     rejectedLiterals: finalWrite ? finalWrite.rejectedLiterals : [],
+    spokenLanguagePass: voiceEdits[index] ? {
+      changed: voiceEdits[index].changed,
+      nativeVoice: voiceEdits[index].nativeVoice,
+      rephrasedPhrases: voiceEdits[index].rephrasedPhrases,
+      translatedPatternsRemoved: voiceEdits[index].translatedPatternsRemoved,
+      precisePhrasesKept: voiceEdits[index].precisePhrasesKept,
+    } : null,
     evidence: research[index] ? research[index].evidence : [],
     unresolved: finalWrite ? finalWrite.unresolved : [],
     scores: verification ? {
@@ -311,6 +379,7 @@ return {
     'Run the product repository locale and format validators.',
     'Run tests and build for every affected surface.',
     'Review the changed copy in the rendered interface at realistic widths.',
+    'Have a native reviewer read the high-impact copy aloud and flag any sentence they would not naturally say.',
     'Report local edits, commits, pushes, deployments, and live verification as separate facts.',
   ],
 }
