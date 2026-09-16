@@ -1,7 +1,7 @@
-# SiloTech Skills
+# Silotech Skills
 
 A small, public collection of [Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-built at [SiloTech](https://silotech.xyz) (UAB Silo Tech) and used in real client work. Each skill is a
+built at [Silotech](https://silotech.xyz) (UAB Silotech) and used in real client work. Each skill is a
 self-contained folder you can drop into Claude Code or any agent runtime that reads the Agent Skills format.
 
 Skills are shared here as-is, one item per folder, so you can read them, learn from them, and adapt them.
@@ -10,6 +10,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 
 | Skill | What it does |
 |---|---|
+| [`wayfinder`](./wayfinder) | A planning harness for work that is far too big for one agent session and foggy at the start. Names the destination, then charts the route as a map of **decision tickets** on your issue tracker or in plain markdown files: research, prototype, grilling, and task tickets, wired by blocking, with everything still too vague to state kept as fog until a resolution sharpens it. One ticket per session, so the plan outlives the context window. Adds decision rights (the agent may settle only what is cheap and reversible), a leverage-ordered frontier, an assumption register, and supersede handling when a new decision contradicts an old one. Works for engineering, and equally for strategy, hiring, launches, or funding applications. Derived from Matt Pocock's MIT-licensed `wayfinder`, see [ATTRIBUTION](./wayfinder/ATTRIBUTION.md). |
 | [`refine`](./refine) | A generalized, domain-agnostic iterative-improvement harness. Turns "make this better" into a disciplined loop: frame the purpose, decompose into independently-improvable units, derive the evaluation lenses that purpose demands, observe the real rendered output, improve every unit in parallel, verify, iterate, and accumulate lessons so it gets better each run. Works on a slide deck, a document, a codebase, or an analysis. |
 | [`autonomous-loop`](./autonomous-loop) | A generalized "loop engineering" harness. Turns "just let the agent finish the project on its own" into a robust MISSION goal file: it discovers the project's real verification gates and work queue, draws three live diagrams (the loop, the task-dependency DAG, the data flow), installs safety guardrails (stop-don't-fabricate, no-auto-commit, adversarial verification, hygiene, explicit termination), and self-checks the plan. Run it plan-only to produce an implementation roadmap a team can estimate and execute, or hand the MISSION to an agent to drive to completion. |
 | [`launch-readiness`](./launch-readiness) | A multi-agent "does this look live?" review. Fans out 10-15 perspective subagents (placeholder copy, test data, default assets, SEO leftovers, dead links, test-mode payments, raw i18n keys, debug routes, legal gaps, funnel walkthrough) over the codebase and the deployed product in several discovery rounds, adversarially verifies every finding, and writes a stable-numbered action plan the user triages and hands to `autonomous-loop` for fixing. The detector and planner that sits in front of the other two skills. |
@@ -22,6 +23,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 
 ## Which one, when
 
+- You have an **ambitious, foggy idea** that no single session could plan, and you do not yet know the steps -> `wayfinder`, then hand its finished map to `feature-factory` or `autonomous-loop` to execute.
 - You have a thing (deck, doc, codebase, analysis) and want it **better** -> `refine`.
 - You have a project and want an agent to **drive it to done** (or produce the roadmap for that) -> `autonomous-loop`.
 - You have a product that is about to go (or just went) **live** and want to know what still smells unfinished -> `launch-readiness`, then hand its plan to `autonomous-loop`, and polish individual artifacts with `refine`.
