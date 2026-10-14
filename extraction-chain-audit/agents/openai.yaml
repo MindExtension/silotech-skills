@@ -1,0 +1,4 @@
+interface:
+  display_name: "Extraction Chain Audit"
+  short_description: "Find silent errors and design flaws in extraction-to-aggregate pipelines"
+  default_prompt: "Use $extraction-chain-audit: pin the instance, pick the mode (QUICK SCAN, BUILD, PREFLIGHT, AUDIT, DESIGN REVIEW or INCIDENT), stay read-only unless the mode allows changes, and report every check as PASS, FAIL or NOT-CHECKED."
