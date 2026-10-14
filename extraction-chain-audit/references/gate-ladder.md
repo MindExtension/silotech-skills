@@ -30,6 +30,10 @@ Apply `contracts-by-construction.md`: value envelope (tri-state, status, scope, 
 aggregate envelope (denominator, exclusions, contributing ids), closed vocabularies with explicit
 `unresolved` and `assumed` members, definitional slots, immutable registered versions, tenant sharding,
 reference taint, decision store with consumer keys, model-call envelope.
+A schema enforces nothing until its enforcement layer is tested: when constrained decoding or a validator
+library carries the contract, feed it one seeded violating output per keyword the contract relies on
+(enum, pattern, required, nullability, ranges, nested references) and observe a rejection. Engines often
+accept a schema yet ignore some of its keywords (`techniques.md` section G).
 
 ## G1 Static (seconds, pre-merge)
 | Check | How | Prevents |
@@ -177,6 +181,13 @@ downstream (page images, attachments, cached tiles), so dangling references fail
 publish. Records are captured from real sources, stored as fixtures with digests, and refreshed when a
 tenant's sources change.
 
+Expectation record (written before launch, never after seeing results): for each published aggregate
+with S >= 7 and each tenant, the expected value or range from an independent route (last accepted
+version, a disaggregated estimate by stratum, a control total from another source), the acceptable
+difference, and the breach procedure (who investigates, what is held). G5 compares against it; a breach
+runs the procedure and opens an INCIDENT. Matching the expectation is not proof of correctness, and a
+result that matches a hypothesis suspiciously exactly is itself a reason to look.
+
 Keep-going mode: on smoke records the chain continues past failures and collects ALL errors into one
 report keyed by `(node, error class, field path)`. Fix all of them, rerun preflight, then start the
 expensive run. Pilot one tenant (smallest complete one) through the full run and promotion before
@@ -198,6 +209,8 @@ fanning out to all tenants.
 - Counters `solved` vs `fallback_used` per node; share of non-observed values per delivered field. FM-05, FM-06.
 - Yield per extractor per tenant and default-bucket share; near-zero yield fails. FM-26.
 - Block-code concentration: one code over 90% of entities alarms. FM-30.
+- Each S >= 7 aggregate against its expectation record (G4): outside the acceptable difference runs the
+  pre-written breach procedure; volume and value distribution per seam against the previous run.
 - Distribution smell scan per field and tenant (also the cheapest independent path B in AUDIT): round
   constants across inputs of different size; a child value equal to its neighbour's or the cohort median;
   identical values at distinct locations; a provenance field with one value across N items; a large

@@ -75,7 +75,7 @@ finding against the missing earlier gate).
 | small change, review comment, "is this safe to merge" | QUICK SCAN |
 | new stage, field, vocabulary, tenant type, schema or prompt change | BUILD |
 | producer graph, lineage or source-of-truth refactor that keeps the artifact shape (new producer for an existing artifact, legacy path kept alongside) | BUILD (B1 with acceptance predicates, B3 on PROV and VER) |
-| about to launch a run over ~10 minutes or a paid batch, no design change | PREFLIGHT: G4 P1-P10 plus fingerprint items (`references/gate-ladder.md` G4), keep-going mode, about 5 minutes |
+| about to launch a run over ~10 minutes or a paid batch, no design change | PREFLIGHT: G4 P1-P10 plus fingerprint items and the expectation record (`references/gate-ladder.md` G4), keep-going mode, about 5 minutes |
 | before productization or a release; "what else is broken" | AUDIT |
 | a written design or pipeline description with no instance, code or outputs | DESIGN REVIEW |
 | one wrong number, silent zero, crash, complaint, a run failing again | INCIDENT |
@@ -164,8 +164,9 @@ Input: scope, budget (time, tokens, agents), read access. Output: the artifacts 
   independent verifier, tri-state verdict, both roots, class predicate, S, blast radius, two-stage dedupe.
 - A7 Coverage and stop: the completeness critic gives every FM and ST id a status in `coverage.jsonl`
   (empty cells for S >= 7 modes start a gap round). Stop rule (`references/hunt-and-stop.md` section 3):
-  planted recall >= 0.8, K = 2 dry rounds, and the capture-recapture residual unless counts are small or
-  the audit is solo. Out of budget first: label the report INCOMPLETE and list unmet criteria.
+  planted recall >= 0.8, K = 2 dry rounds, the capture-recapture residual unless counts are small or
+  the audit is solo, and for every S >= 7 published total a value-weighted error bound below its
+  tolerable error. Out of budget first: label the report INCOMPLETE and list unmet criteria.
 - A8 Report: top risks, counts by root, guard health, run economics, residual, NOT-CHECKED list, next
   actions by severity, then cheapest earliest gate. Fix only on the user's opt-in (then INCIDENT I4-I9).
 

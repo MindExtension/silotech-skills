@@ -179,3 +179,34 @@ a method; the steps themselves live in the other references.
 - Production-readiness and data-cascade audits. Sources: The ML Test Score
   https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/ ;
   Data Cascades https://research.google/blog/data-cascades-in-machine-learning/
+
+## I. Regulated-practice and 2025-2026 additions (value-weighted assurance, enforcement, provenance)
+- Expectation before computation, disaggregated for precision. Apply: `gate-ladder.md` G4 expectation
+  record, G5. Source: ISA 520 Analytical Procedures https://www.frc.org.uk/docs/2453/html
+- Value-proportional sampling, projected misstatement against tolerable error. Apply: `hunt-and-stop.md`
+  section 3 value-weighted residual. Source: ISA 530 Audit Sampling https://iaasa.ie/wp-content/uploads/2022/11/ISA-530_Oct_2022.pdf
+- Omission sampling (elusion) and recall-based stopping in document review. Apply: omission stratum.
+  Sources: https://aceds.org/the-elusion-illusion-and-the-ai-revolution-aceds-blog/ ; https://arxiv.org/abs/2404.01176
+- Critical data elements, reconciliation of published aggregates to an independent book of record,
+  disclosed approximations. Source: BCBS 239 progress report 2023 https://www.bis.org/bcbs/publ/d559.htm
+- Effective challenge (objective, competent, with authority), rigor scaled by materiality. Apply:
+  `guard-the-guards.md` criterion 8. Source: Federal Reserve SR 26-2 (2026, replaces SR 11-7)
+  https://www.federalreserve.gov/supervisionreg/srletters/sr2602.htm
+- Analyst and assurer as different roles; assurance scaled by criticality, reliance and novelty.
+  Source: UK Aqua Book 2025 https://www.gov.uk/guidance/the-aqua-book
+- Pre-set quality tolerance limits with a predefined breach procedure. Source: ICH E6(R3) overview
+  https://cluepoints.com/ich-e6r3-demystified-part-3-quality-tolerance-limits/
+- Tools whose PASS removes other checks need stronger qualification. Source: DO-330 briefing
+  https://ldra.com/wp-content/uploads/ldra/DO-330-Test-Tool-Qualification-Technical-Briefing-v2.0.pdf
+- Natural errors differ from planted ones; static checkers caught few natural spreadsheet errors.
+  Source: Panko, EuSpRIG https://arxiv.org/abs/1009.2785
+- Defeaters: confidence grows as doubts are eliminated; an open defeater keeps the claim open.
+  Source: Rushby, Assurance 2.0 https://www.csl.sri.com/~rushby/abstracts/defeaters24
+- Constrained decoding accepts schemas it does not fully enforce. Apply: `gate-ladder.md` G0.
+  Source: JSONSchemaBench https://arxiv.org/html/2501.10868v2
+- Structured-output constraints can silently disable tool use; fidelity checks pass invented text.
+  Apply: `guard-the-guards.md` section 6. Source: Fidelity Is Not Enough https://arxiv.org/abs/2608.28439
+- Omitted vs invented fields scored separately; valid output collapses on very large schemas.
+  Source: ExtractBench https://arxiv.org/abs/2602.12247
+- Reached markers before assertions; variant widening with a noise stop. Sources: Trail of Bits skills
+  https://github.com/trailofbits/skills (post-patch-validation, variant-analysis)

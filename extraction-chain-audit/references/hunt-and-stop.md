@@ -106,6 +106,24 @@ Branch choice:
   anything; with m = 0 the estimate is undefined), and always in a solo audit (round 1 `path: "both"`).
   Capture-recapture cannot certify such a hunt, so planted defects certify it instead.
 
+Value-weighted residual (the error in each published total). Chapman counts bugs; readers rely on
+totals. For every published aggregate with S >= 7, fix before the hunt the tolerable error `TE` and the
+expectation record (`gate-ladder.md` G4). Then:
+- Sample source units with probability proportional to their contribution to the total (money or
+  quantity unit sampling), stratified by tenant and rare state. Add an omission stratum sampled from
+  sources or regions where nothing was extracted: value-weighted sampling never selects what is missing.
+- Recheck each sampled unit against the source blind, by a route independent of the producer.
+- Project per stratum: taint = error / recorded value; projected error = mean taint x stratum value; add
+  the omission stratum's projected missing value. With zero errors the 95% upper bound is 3.0 x the
+  sampling interval (stratum value / n).
+- PASS for that total only when the upper bound is below `TE`; otherwise FAIL with the projected error.
+Review order for candidates and records: score = suspicion (model disagreement, failed edit rules, no
+source span, unusual value) x impact (share of a published total it can move); work from the top down
+until the remaining expected impact is below `TE`, plus a small random stratified sample so the score
+itself is checked.
+Open doubts (defeaters): any recorded reason to doubt a PASS (unverified assumption, untested guard,
+unread source) stays open until eliminated with evidence; an open doubt keeps that PASS at `plausible`.
+
 Stop when ALL hold:
 1. Both paths completed and sealed for the agreed scope.
 2. Standard branch: `R <= max(2, 0.1 * F)`. Low-count branch: at least 3 planted defects in
@@ -124,6 +142,8 @@ Stop when ALL hold:
 5. Planted recall >= 0.8 (both branches; planting before round 1 is mandatory, `guard-the-guards.md`
    section 7).
 6. No HAZOP cell in scope is left `not_examined`.
+7. Every S >= 7 published total has a value-weighted upper bound below its `TE`, or is listed as
+   NOT-CHECKED(tolerance) with the reason; no open doubt undercuts a PASS on such a total.
 
 Budget stop: when time or token budget ends first, stop, label the report `INCOMPLETE`, list which stop
 criteria failed, and list the NOT-CHECKED items. Never present an incomplete hunt as clean.
@@ -142,6 +162,8 @@ Results: pass <n> | fail <n> | not-checked <n> (reasons: access <n>, approval <n
 Confirmed S>=4 findings: <n>; paths A <n1>, B <n2>, both <m> (sealed: yes|no)
 Verification: fresh context | human | same-context, unverified (verdicts capped at plausible)
 Stop branch: standard (residual <R>, lower bound) | low-count (planted recall <x> of <k>); dry rounds <d>
+Totals: <total>: upper bound <x> vs TE <y> (PASS|FAIL|NOT-CHECKED) for each S>=7 total
+Open doubts: <defeaters still open, each capping a PASS at plausible>
 Not swept: <seams, grid cells or FM ids>
 Unknown: <what this audit cannot say and why>
 ```

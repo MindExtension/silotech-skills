@@ -122,7 +122,10 @@ Run the predicate (and the invariant) over five dimensions:
 Record `siblings=<n>` with the query. Each hit is a sibling finding with its own ledger row and the same
 class id. Zero siblings is an absence claim: it needs a positive control (the predicate finds the
 original case, or a seeded copy of it, on the same instance). A predicate that finds only the original
-case is suspicious: widen it (different tenant, stage, spelling) and rerun before accepting 1.
+case is suspicious: widen it (different tenant, stage, spelling) and rerun before accepting 1. Widen one
+element at a time; stop widening when more than half of the new hits are noise, and record the patterns
+that were tried and rejected. Three failed fixes for the same class mean the design is the problem:
+stop patching and run DESIGN REVIEW on the seam.
 
 ## I6 Fix the root
 Collection and Structure: change the shared extractor, carrier traversal, schema, prompt or card so every

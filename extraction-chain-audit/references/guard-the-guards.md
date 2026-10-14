@@ -15,7 +15,9 @@ give detection D = 9-10.
    FAIL or non-zero exit, restore, observe PASS on the clean input (the positive control). Record the date
    and the instance. A guard that never passes a known-good input is noise, not protection.
 3. Executes: it reports how many items it checked; `executed_count = 0` is FAIL, a skip is FAIL; shell
-   pipelines use `set -o pipefail`; background logs are judged by content, not exit status.
+   pipelines use `set -o pipefail`; background logs are judged by content, not exit status. Each assertion
+   records that it was reached (a marker or counter just before it asserts); an assertion never reached
+   is NOT-CHECKED, not PASS.
 4. Scoped: `scope` says what it scans and `blind_spots` lists what it does not (languages, runtimes,
    artifact types, environments, fallback entry points, state transitions vs existing state, data vs code).
 5. Baseline-safe: if it compares against a baseline, the baseline cannot be empty or deleted by the
@@ -26,6 +28,11 @@ give detection D = 9-10.
    it blocks or is deleted.
 7. Independent: it does not re-derive the value with the producer's own code path or read the producer's
    cache; it reads the live artifact it claims to check; a model judge is not the extractor's model family.
+8. Reliance-scaled: a guard whose PASS is used to skip, waive or replace other checks (a gate that lets
+   later checks drop, a judge standing in for review) must also kill replayed real incidents, not only
+   planted faults: planted faults are easier than natural errors, and checkers that catch every planted
+   fault can still miss most natural ones. Its FAIL must be able to block the release; a challenger
+   without that authority is not a control.
 
 ## 2. Guard audit: ordered verdict procedure (AUDIT A3, INCIDENT I3, BUILD B5)
 For each guard in scope, in this order; stop at the first failing step and record `verdict` and
@@ -143,6 +150,10 @@ bootstrap interval; if `TPR + TNR - 1 < 0.3` the judge is not usable as a gate. 
 model family as its only judge. Re-validate after any model, prompt or source-type change. Log the
 first-attempt failure rate of any assert-and-retry loop. A judge no more accurate than the system it
 evaluates cannot replace most gold labels: budget for them.
+Fidelity checks need process evidence: every extracted value carries its source span (character or
+region position), and agentic extractors keep the tool-call log. A structured-output constraint can
+silently disable tool use, after which the model invents source text that still passes a fidelity check;
+only the call log shows it. Score omitted fields separately from invented ones.
 
 ## 7. Guards on the audit itself (planted defects)
 Finder agents and reviewers are guards. Every AUDIT plants 3-5 known defects from the seed library in a
