@@ -21,6 +21,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 | [`plain-answers`](./plain-answers) | A plain-language output setup that fixes jargon-dense, wall-of-text agent replies. A Claude Code output style (lead with the answer, short sentences, no unexplained acronyms, length matched to the question) plus an equivalent `AGENTS.md` block for Codex. Ships with install steps and the reasoning for why an output style beats the same rule in CLAUDE.md. |
 | [`bro`](./bro) | One-line skill: restate the last answer in plain human language with zero jargon, at a third of the length, keeping every decision and number that mattered. |
 | [`quick`](./quick) | One-line skill: compress the last answer into the N most important takeaways (default 3), numbered, most important first; an open question for the user is always number 1. |
+| [`cook`](./cook) | Leon Lin's Cook Loop for visual builds that must hold up next to reference images, screens or videos: 3D worlds in code, films, launch videos, games and polished UI. One intake with defaults, then a long autonomous loop: build, render stills at fixed shots, compare side by side with the references, score with zero-context critic subagents against a numeric bar per dimension, fix the weakest part, log the round. The final render waits for the user's approval of the stills. Third-party skill, MIT, included unmodified, see [ATTRIBUTION](./cook/ATTRIBUTION.md). |
 
 ## Which one, when
 
@@ -33,6 +34,7 @@ Skills are shared here as-is, one item per folder, so you can read them, learn f
 - You have **one well-scoped feature request** and want an agent to carry it from intake to a review-ready PR (with human gates on every real decision) -> `feature-factory`, which drives `autonomous-loop` for the build and `refine` for the copy/screens.
 - You have **several Gmail inboxes** and want one agent to read them all, pull the invoices, and prepare replies -> `gmail-multi-account`.
 - Your agent's replies are **jargon-dense walls of text** -> install `plain-answers` (the output style), then use `bro` and `quick` to shorten on demand.
+- You have **reference images, screens or videos** and want a visual build iterated until it matches them -> `cook`. For improving an existing artifact without references, use `refine`.
 
 ## The `refine` super-prompt
 
