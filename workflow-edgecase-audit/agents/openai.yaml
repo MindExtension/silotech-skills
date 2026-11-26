@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow Edge-case Audit"
+  short_description: "Evidence-first multi-agent workflow bug audit"
+  default_prompt: "Use $workflow-edgecase-audit read-only, preserve the dirty worktree, scan this repository's workflows for edge-case bugs, and return only revalidated findings."

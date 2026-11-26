@@ -1,0 +1,21 @@
+# Grep pack GP-1..GP-12 for extraction-chain-audit (gate-ladder.md G1). Run with scripts/grep_pack.py.
+# Columns, tab-separated: id, kind (line | multi | absent), file-name glob, sample the pattern MUST match
+# (\n = newline), Python regex. "multi" scans the whole file; "absent" lists matching files that LACK it.
+# Hits are candidates, not findings. A zero counts only when the sample matched and files were scanned.
+GP-1	line	*	x = row.get("qty", 0)	\.get\([^)]*,\s*(0|\[\]|\{\}|""|''|None|False)\)
+GP-1	line	*	total = qty ?? 0	(\?\?|\|\|)\s*(0|\[\]|\{\}|''|"")
+GP-1	line	*	items = found or []	\bor\s+(0|\[\]|\{\}|""|'')\s*$
+GP-1	line	*	df.fillna(0)	fillna\(0\)|COALESCE\([^)]*,\s*0\)|IFNULL\(
+GP-1	multi	*	try:\n    load()\nexcept ValueError:\n    return []	(except|catch)\b[^\n]*\n(?:[^\n]*\n){0,2}?[ \t]*(return\s+(None\b|null\b|0\b|false\b|\[\]|\{\})|pass[ \t]*$)
+GP-2	line	*	rows = rows[:50]	\[:\s*\d+\]|\.head\(\d+\)|LIMIT\s+\d+|\.slice\(0,\s*\d+\)|max_tokens|top_k|page_size|truncat
+GP-3	line	*	if name.startswith(prefix):	LIKE\s+'%|\.includes\(|startswith\(|endswith\(
+GP-4	line	*	except Exception:	except Exception|except:|catch\s*\(\w*\)\s*\{\s*\}|errors\s*=\s*['"]ignore
+GP-5	line	*	rate = DEFAULT_RATE	fallback|default_|DEFAULT_|assum|median\(
+GP-6	line	*	pytest tests | tee log.txt	\|\s*tee|\|\|\s*true|continue-on-error|pytest\.mark\.skip|--deselect|\.skip\(
+GP-6	absent	*.sh	set -euo pipefail	set\s+-[a-zA-Z]*o\s+pipefail
+GP-7	line	*	gold_totals = load()	(?i)(reference|gold|expected|answer.?key|benchmark|prior.?period)
+GP-8	line	*	for attempt in range(3):	retry|for attempt in|backoff|max_retries
+GP-9	line	*	SELECT * FROM v ORDER BY created, version DESC	latest|current_version|displayed|max\(version\)|ORDER BY .*version DESC
+GP-10	line	*	if round(a, 2) == round(b, 2):	round\([^)]*\)\s*(==|<=|>=|<|>)
+GP-11	line	*	label = "Stra\U+00DFe"	\\U\+[0-9A-Fa-f]{4}|\\M\+[0-9A-Fa-f]|%%[cdpCDP]|&#x?[0-9A-Fa-f]+;|\\u[0-9A-Fa-f]{4}|\uFFFD|Ã[\u0080-\u00BF]|Ä[\u0080-\u00BF]|Å[\u0080-\u00BF]|â€
+GP-12	line	*	SUPPORTED_VERSIONS = {"v2", "v3"}	(?i)(supported|allowed|known)_?(schema_?)?versions?\s*[:=]
